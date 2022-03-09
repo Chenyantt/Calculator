@@ -11,8 +11,9 @@
 using namespace std;
 
 string Calculator(string equation) {
-	vector <string> vec(50,"");
-	if (isLegal(equation) ) {
+	vector <string> vec(50, "");
+	if (equation == "") return "表达式不能为空！！！";
+	if (isLegal(equation)) {
 		if (BracketMatch(equation)) {
 			if (isBlankLegal(equation)) {
 				Operand(equation, vec);
@@ -23,7 +24,7 @@ string Calculator(string equation) {
 						if (isAddLegal(vec)) {
 							NegativeDeal(vec);
 							vec = ReverseNotation(vec);
-							vector <string> error=Eval(vec);
+							vector <string> error = Eval(vec);
 							if (error[0] == "除数不能为零！") return error[0];
 							if (error[0] == "操作符误用！") return error[0];
 							return vec_to_str(vec);
@@ -48,8 +49,8 @@ int isLegal(string equation) {
 	for (int i = 0; i < length; ++i) {
 		char ch = equation[i];
 		if ((ch >= 45 && ch <= 57) ||
-		    (ch >= 40 && ch <= 43) || 
-			 ch == 32)  continue;
+			(ch >= 40 && ch <= 43) ||
+			ch == 32)  continue;
 		else return 0;
 	}
 	return 1;
@@ -70,10 +71,10 @@ int BracketMatch(string equation) {
 	else return 0;
 }
 
-int isBlankLegal(string &equation) {
+int isBlankLegal(string& equation) {
 	while (equation[0] == ' ') equation = equation.substr(1);
 	int i = 1;
-	while(i < (int)equation.length()-1) {
+	while (i < (int)equation.length() - 1) {
 		if (equation[i] == ' ') {
 			if (((equation[i - 1] >= '0' && equation[i - 1] <= '9') || equation[i - 1] == '.') &&
 				((equation[i + 1] >= '0' && equation[i + 1] <= '9') || equation[i + 1] == '.')) {
@@ -89,10 +90,10 @@ int isBlankLegal(string &equation) {
 	return 1;
 }
 
-void Operand(string equation, vector<string> &vec) {
-	int index=0;
-	for (int i = 0; i < (int)equation.length();++i) {
-		if ((equation[i] >= '0' && equation[i] <= '9' )|| equation[i]=='.') {
+void Operand(string equation, vector<string>& vec) {
+	int index = 0;
+	for (int i = 0; i < (int)equation.length(); ++i) {
+		if ((equation[i] >= '0' && equation[i] <= '9') || equation[i] == '.') {
 			vec[index] += equation[i];
 		}
 		else {
@@ -109,22 +110,23 @@ void Operand(string equation, vector<string> &vec) {
 }
 
 int isOperatorNext(vector<string> vec) {
-	for (int i = 1; vec[i]!=""; ++i) {
-		char first = vec[i-1][0], second = vec[i][0];
+	for (int i = 1; vec[i] != ""; ++i) {
+		char first = vec[i - 1][0], second = vec[i][0];
 		if ((first == '+' || first == '-' || first == '*' || first == '/') &&
-			(second == '+' || second == '-' || second == '*' || second == '/') ) {
+			(second == '+' || second == '-' || second == '*' || second == '/')) {
 			return 0;
-		}else if (first == '(' && second == ')') return -1;
+		}
+		else if (first == '(' && second == ')') return -1;
 	}
 	return 1;
 }
 
 int isAddLegal(vector<string> vec) {
 	if (vec[0] == "+" || vec[0] == "*" || vec[0] == "/") return 0;
-	for (int i = 1; vec[i]!=""; ++i) {
+	for (int i = 1; vec[i] != ""; ++i) {
 		if (vec[i] == "+" || vec[i] == "*" || vec[i] == "/") {
-			if (((vec[i - 1][0] < '0' || vec[i - 1][0] > '9') && vec[i-1][0]!=')')
-				|| ((vec[i + 1][0] < '0' || vec[i + 1][0] > '9') && vec[i+1][0]!='('))
+			if (((vec[i - 1][0] < '0' || vec[i - 1][0] > '9') && vec[i - 1][0] != ')')
+				|| ((vec[i + 1][0] < '0' || vec[i + 1][0] > '9') && vec[i + 1][0] != '('))
 				return 0;
 		}
 	}
@@ -137,7 +139,7 @@ int isNumberLegal(vector<string> vec) {
 			count(vec[i].begin(), vec[i].end(), '.') > 1) {
 			return 0;
 		}
-		else if (vec[i].find('.') != -1 && 
+		else if (vec[i].find('.') != -1 &&
 			vec[i].length() > vec[i].find('.') + 2) {
 			return -1;
 		}
@@ -145,7 +147,7 @@ int isNumberLegal(vector<string> vec) {
 	return 1;
 }
 
-void NegativeDeal(vector<string> &vec) {
+void NegativeDeal(vector<string>& vec) {
 	if (vec[0][0] == '-') {
 		if (vec[1][0] >= '0' && vec[1][0] <= '9') {
 			vec.insert(vec.begin(), "0");
@@ -155,7 +157,7 @@ void NegativeDeal(vector<string> &vec) {
 		else if (vec[1][0] == '(') {
 			stack <string> st;
 			int i;
-			for (i = 1; vec[i]!=""; ++i) {
+			for (i = 1; vec[i] != ""; ++i) {
 				if (vec[i] == "(") st.push("(");
 				else if (vec[i] == ")") {
 					st.pop();
@@ -167,17 +169,17 @@ void NegativeDeal(vector<string> &vec) {
 			vec.insert(vec.begin(), "(");
 		}
 	}
-	for (int i = 1; vec[i]!=""; ++i) {
+	for (int i = 1; vec[i] != ""; ++i) {
 		if (vec[i - 1] == "(" && vec[i] == "-") {
-			if (vec[i+1][0] >= '0' && vec[i+1][0] <= '9') {
+			if (vec[i + 1][0] >= '0' && vec[i + 1][0] <= '9') {
 				vec.insert(vec.begin() + i, "0");
 				vec.insert(vec.begin() + i, "(");
-				vec.insert(vec.begin() + 4 +i, ")");
+				vec.insert(vec.begin() + 4 + i, ")");
 			}
-			else if (vec[i+1][0] == '(') {
+			else if (vec[i + 1][0] == '(') {
 				stack <string> st;
 				int j;
-				for (j = i+1; vec[j]!=""; ++j) {
+				for (j = i + 1; vec[j] != ""; ++j) {
 					if (vec[j] == "(") st.push("(");
 					else if (vec[j] == ")") {
 						st.pop();
@@ -201,7 +203,7 @@ vector<string> ReverseNotation(vector<string> vec) {
 	operators.insert(pair<string, int>("/", 2));
 	operators.insert(pair<string, int>("+", 1));
 	operators.insert(pair<string, int>("-", 1));
-	for (int i = 0; vec[i]!=""; ++i) {
+	for (int i = 0; vec[i] != ""; ++i) {
 		string str = vec[i];
 		if (str == " ") continue;
 		else if (str[0] >= '0' && str[0] <= '9') output.push_back(str);
@@ -239,11 +241,11 @@ vector<string> ReverseNotation(vector<string> vec) {
 	return output;
 }
 
-vector<string> Eval(vector<string> &vec) {
+vector<string> Eval(vector<string>& vec) {
 	vector<string> error1 = { "除数不能为零！" };
 	vector<string> error2 = { "操作符误用！" };
 	if (vec.size() == 1) return vec;
-	if (((vec[0][0] >= '0' && vec[0][0] <= '9')|| vec[0][0]=='-') && ((vec[1][0] < '0' || vec[1][0]>'9') && vec[1][0]!='-'))
+	if (((vec[0][0] >= '0' && vec[0][0] <= '9') || vec[0][0] == '-') && ((vec[1][0] < '0' || vec[1][0]>'9') && (vec[1][0] != '-' || vec[1].length() == 1)))
 		return error2;
 	int i;
 	for (i = 0; i < (int)vec.size(); ++i) {
@@ -263,7 +265,7 @@ vector<string> Eval(vector<string> &vec) {
 		str = to_string(stod(vec[i - 1]) * stod(vec[i - 2]));
 		break;
 	case '/':
-		if(stod(vec[i-1])==0){
+		if (stod(vec[i - 1]) == 0) {
 			return error1;
 		}
 		str = to_string(stod(vec[i - 2]) / stod(vec[i - 1]));
@@ -281,8 +283,8 @@ vector<string> Eval(vector<string> &vec) {
 string vec_to_str(vector<string> vec) {
 	stringstream ss;
 	double d = round(stod(vec[0]) * 10);
-	ss << setprecision(1) <<fixed << d/10;
-	string str=ss.str();
+	ss << setprecision(1) << fixed << d / 10;
+	string str = ss.str();
 	if (str[str.find('.') + 1] == '0') return str.substr(0, str.length() - 2);
 	return str;
 }
