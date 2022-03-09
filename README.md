@@ -5,4 +5,4 @@ Just a naive calculator
 
 
 2022/3/9  version 1.1 
-Repair the bug of nagative sign and blank input
+  Repair the bug of nagative sign and blank input
