@@ -27,6 +27,8 @@ string Calculator(string equation) {
 							vector <string> error = Eval(vec);
 							if (error[0] == "除数不能为零！") return error[0];
 							if (error[0] == "操作符误用！") return error[0];
+							if (error[0] == "表达式出错!") return error[0];
+							if (vec[0] == "-") return "操作符误用";
 							return vec_to_str(vec);
 						}
 						else return "不允许单目的 '+'或者'*'或者'/' 运算符";
@@ -244,6 +246,7 @@ vector<string> ReverseNotation(vector<string> vec) {
 vector<string> Eval(vector<string>& vec) {
 	vector<string> error1 = { "除数不能为零！" };
 	vector<string> error2 = { "操作符误用！" };
+	vector<string> error3 = { "表达式出错!" };
 	if (vec.size() == 1) return vec;
 	if (((vec[0][0] >= '0' && vec[0][0] <= '9') || vec[0][0] == '-') && ((vec[1][0] < '0' || vec[1][0]>'9') && (vec[1][0] != '-' || vec[1].length() == 1)))
 		return error2;
@@ -251,6 +254,7 @@ vector<string> Eval(vector<string>& vec) {
 	for (i = 0; i < (int)vec.size(); ++i) {
 		if (vec[i] == "+" || vec[i] == "-" || vec[i] == "*" || vec[i] == "/") break;
 	}
+	if (i == vec.size()) return error3;
 	char ch = vec[i][0];
 	string str;
 	switch (ch)
